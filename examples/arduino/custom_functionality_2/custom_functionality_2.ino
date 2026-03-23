@@ -10,7 +10,6 @@ public:
     void draw_snake()
     {
         this->clear_string(MyLcd::CharacterStrings::main);
-
         this->set_segment(_iterator++ % _snake_segments_size, true);
         this->update();
     }
@@ -22,11 +21,8 @@ private:
     uint32_t _iterator = 0;
 };
 
-const uint8_t MyLcd::_snake_segments[_snake_segments_size] = {MyLcd::Segments::_10A, MyLcd::Segments::_11A, MyLcd::Segments::_12A, MyLcd::Segments::_13A,
-                                                              MyLcd::Segments::_14A, MyLcd::Segments::_15A, MyLcd::Segments::_16A, MyLcd::Segments::_17A,
-                                                              MyLcd::Segments::_17B, MyLcd::Segments::_17C, MyLcd::Segments::_17D, MyLcd::Segments::_16D,
-                                                              MyLcd::Segments::_15D, MyLcd::Segments::_14D, MyLcd::Segments::_13D, MyLcd::Segments::_12D,
-                                                              MyLcd::Segments::_11D, MyLcd::Segments::_10D, MyLcd::Segments::_10E, MyLcd::Segments::_10F};
+const uint8_t MyLcd::_snake_segments[_snake_segments_size] = {_10A, _11A, _12A, _13A, _14A, _15A, _16A, _17A, _17B, _17C,
+                                                              _17D, _16D, _15D, _14D, _13D, _12D, _11D, _10D, _10E, _10F};
 
 MyLcd lcd;
 
