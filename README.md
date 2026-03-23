@@ -1,4 +1,4 @@
-# UC1677C LCD Library (CGS164A00 / CGS214A06)
+# UC1677C LCD Library (CGS164A00-THW-R / CGS214A06-THW-R)
 
 A lightweight, **header-only** C++11 library for controlling LCD displays based on the **UC1677C** controller by the I2C interface. Designed specifically for resource-constrained embedded systems.
 
