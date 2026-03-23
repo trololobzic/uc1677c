@@ -329,7 +329,7 @@ public:
 
             if (str[i+1] == '.' || str[i+1] == ',')
             {
-                character |= 0x80 ;
+                character |= _dot ;
                 skip_next_char = true ;
             }
             _set_char_in_string(where, character, pos++);
@@ -361,7 +361,7 @@ public:
             frac_part /= 10;
         }
 
-        uint8_t dot = 0x80;
+        uint8_t dot = _dot;
         while (int_part > 0 && pos >= 0)
         {
             _set_char_in_string(where, _get_character((int_part % 10 + '0') | dot), pos--);
@@ -438,16 +438,18 @@ protected:
     enum class TickSegments{tick_1, tick_2, tick_3, tick_4, tick_5, tick_6, tick_7, tick_8, size};
     enum class OtherSegments{tariff_word, max_word, low_battery, reley_first_half, reley_second_half, time, date, size};
 
+    static constexpr uint8_t _dot = 0x80;
+
+    /// @brief Representation of each of the 256 ascii characters as 7 segments
+    /// @verbatim
+    ///  ---     F
+    /// |   |  E   A
+    ///  ---     G
+    /// |   |  D   B
+    ///  ---     C
+    /// @endverbatim
     static uint8_t _get_character(uint8_t ascii_index)
     {
-        /// @brief Representation of each of the 256 ascii characters as 7 segments
-        /// @verbatim
-        ///  ---     F
-        /// |   |  E   A
-        ///  ---     G
-        /// |   |  D   B
-        ///  ---     C
-        /// @endverbatim
         static constexpr uint8_t alphabet[256] =
         {
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

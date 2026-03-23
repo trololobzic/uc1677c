@@ -59,12 +59,12 @@ struct MyI2C {
 The library includes ready-to-use examples located in the [/examples](./examples) folder:
 
 ### 🔧 MSP430 (Professional Toolchain)
-Located in `examples/msp430_demo/`. This example uses a **Makefile** for automated building.
+Located in [/examples/msp430](./examples/msp430/). These examples use a **Makefile** for automated building.
 - **Compiler**: `msp430-elf-g++`
 - **How to run**: Navigate to the folder and run `GCC_PATH='path_to_msp430_gcc' make`. For example `GCC_PATH=/opt/ti/msp430-gcc make`
 
 ### ♾️ AVR / Arduino
-Located in `examples/avr_arduino/`. Provided as a standard `.ino` file.
+Located in [/examples/arduino](./examples/arduino/). Every example provided as a standard `.ino` file.
 - **Environment**: Arduino IDE or PlatformIO.
 - **Hardware**: Any ATmega-based board (e.g., Arduino Nano/Uno).
 - **How to run**: Open the `.ino` file in Arduino IDE and click **Upload**.
@@ -79,7 +79,7 @@ Lcd lcd;
 int main()
 {
     lcd.init();
-    lcd.print(Lcd::CharacterStrings::main, "Trololo");
+    lcd.print(Lcd::CharacterStrings::main, "uc1677c");
     lcd.update();
     return 0;
 }
