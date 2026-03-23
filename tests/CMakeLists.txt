@@ -18,6 +18,7 @@ add_executable(tests
     main.cpp
     uc1677c_tests.cc
     cgs164a00_tests.cc
+    cgs214a06_tests.cc
 )
 
 target_compile_options(tests PRIVATE -Wall -Wextra)

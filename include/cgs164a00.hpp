@@ -7,6 +7,8 @@ namespace uc1677c
 
 struct Cgs164a00Base
 {
+
+/// @brief List of raw segments. The order is defined in the datasheet.
 enum Segments : uint8_t
 {
     _13A, _P10, _14F, _14E, _14G, _14D, _14B, _14C, _14A, _P11, _15F, _15E, _15G, _15D, _15B, _15C,
