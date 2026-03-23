@@ -1,5 +1,3 @@
 build
-.elf
-.hex
-/.cproject
-/.project
+*.elf
+*.hex
