@@ -1,44 +1,6 @@
 #include <msp430.h>
 #include <stdint.h>
 #include "cgs164a00.hpp"
-/*
-class I2CMaster
-{
-public:
-    // Конструктор инициализирует пины и модуль I2C
-    I2CMaster(uint8_t slaveAddress) {
-        WDTCTL = WDTPW + WDTHOLD;     // Остановка сторожевого таймера
-
-        // Настройка пинов для MSP430G2553 (P1.6 = SCL, P1.7 = SDA)
-        P1SEL  |= BIT6 + BIT7;        // Выбор вторичной функции пинов
-        P1SEL2 |= BIT6 + BIT7;
-
-        UCB0CTL1 |= UCSWRST;          // Вход в режим сброса для настройки
-        UCB0CTL0 = UCMST + UCMODE_3 + UCSYNC; // Master mode, I2C, Sync
-        UCB0CTL1 = UCSSEL_2 + UCSWRST;        // Использовать SMCLK
-        UCB0BR0 = 10;                 // Делитель частоты (fSCL = SMCLK/10)
-        UCB0BR1 = 0;
-        UCB0I2CSA = slaveAddress;     // Адрес ведомого устройства
-
-        UCB0CTL1 &= ~UCSWRST;         // Выход из режима сброса
-    }
-
-    // Простая передача одного байта данных
-    void transmit(uint8_t data) {
-        while (UCB0CTL1 & UCTXSTP);   // Ждем завершения предыдущего STOP
-
-        UCB0CTL1 |= UCTR + UCTXSTT;   // Режим передатчика + START
-
-        while (!(IFG2 & UCB0TXIFG));  // Ждем готовности буфера передачи
-        UCB0TXBUF = data;             // Загружаем данные
-
-        while (!(IFG2 & UCB0TXIFG));  // Ждем окончания передачи байта
-
-        UCB0CTL1 |= UCTXSTP;          // Генерируем STOP
-        while (UCB0CTL1 & UCTXSTP);   // Ждем подтверждения STOP
-    }
-};
-*/
 
 struct I2C
 {
