@@ -442,11 +442,11 @@ protected:
 
     /// @brief Representation of each of the 256 ascii characters as 7 segments
     /// @verbatim
-    ///  ---     F
-    /// |   |  E   A
+    ///  ---     A
+    /// |   |  F   B
     ///  ---     G
-    /// |   |  D   B
-    ///  ---     C
+    /// |   |  E   C
+    ///  ---     D
     /// @endverbatim
     static uint8_t _get_character(uint8_t ascii_index)
     {

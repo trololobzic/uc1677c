@@ -60,8 +60,6 @@ struct I2C_ram_mock
     static bool check_ram(const std::vector<size_t> & bits)
     try
     {
-        //auto clear = uc1677c::ScopeGuard([]{ ram.clear(); });
-
         std::decay_t<decltype(ram)> expected(ram.size(), 0);
         std::ranges::for_each(bits, [&](const auto & bit){
             const auto byte_idx = bit / 8;
@@ -77,14 +75,7 @@ struct I2C_ram_mock
     {
         return false;
     }
-/*
-    static std::ostream & print_ram(std::ostream & os)
-    {
-        std::ranges::for_each(ram, [&](const auto & byte){ os << std::hex << std::setfill('0') << std::setw(2) << static_cast<size_t>(byte) << " "; });
-        os << std::dec;
-        return os;
-    }
-*/
+
     static inline std::vector<uint8_t> ram;
     static inline std::vector<uint8_t> frame;
 };
