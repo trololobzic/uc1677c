@@ -31,6 +31,27 @@ public:
     static constexpr bool value = decltype(test<TI2C>(0))::value;
 };
 
+template<bool B, typename T = void>
+struct enable_if {};
+
+template<typename T>
+struct enable_if<true, T> { typedef T type; };
+
+template<typename T> struct is_integral       : false_type{};
+template<> struct is_integral<bool>           : true_type{};
+template<> struct is_integral<int8_t>         : true_type{};
+template<> struct is_integral<uint8_t>        : true_type{};
+template<> struct is_integral<int16_t>        : true_type{};
+template<> struct is_integral<uint16_t>       : true_type{};
+template<> struct is_integral<int32_t>        : true_type{};
+template<> struct is_integral<uint32_t>       : true_type{};
+template<> struct is_integral<int64_t>        : true_type{};
+template<> struct is_integral<uint64_t>       : true_type{};
+
+template<typename T> struct is_floating_point : false_type{};
+template<> struct is_floating_point<float>    : true_type{};
+template<> struct is_floating_point<double>   : true_type{};
+
 template <typename F>
 class ScopeGuard
 {
@@ -316,46 +337,25 @@ public:
         }
     }
 
-    void print(CharacterStrings where, const char * str)
-    {
-        uint16_t i = 0, pos = 0;
-        bool skip_next_char;
-        uint8_t character;
-
-        while (str[i] != 0x00)
-        {
-            skip_next_char = false;
-            character = _get_character(str[i]);
-
-            if (str[i+1] == '.' || str[i+1] == ',')
-            {
-                character |= _dot ;
-                skip_next_char = true ;
-            }
-            _set_char_in_string(where, character, pos++);
-
-            i += skip_next_char ? 2 : 1 ;
-        }
-    }
-
-    void print(CharacterStrings where, float value)
+    template<typename T, typename enable_if<is_floating_point<T>::value, bool>::type = true>
+    void print(CharacterStrings where, T value, uint16_t precision = 2)
     {
         clear_string(where);
         int16_t pos = TLcd::_get_string_segments_map(where).size - 1;
         const auto sign = Utils::absolute_value(value);
-        const int32_t ten_to_dp_power = Utils::power_of_10(_decimal_places);
+        const int32_t ten_to_precision_power = Utils::power_of_10(precision);
 
         int32_t int_part = static_cast<int32_t>(value);
-        int32_t frac_part = static_cast<int32_t>((value - static_cast<float>(int_part)) * ten_to_dp_power);
+        int32_t frac_part = static_cast<int32_t>((value - static_cast<T>(int_part)) * ten_to_precision_power);
 
         //try to eliminate potential rounding error
-        if (frac_part >= ten_to_dp_power)
+        if (frac_part >= ten_to_precision_power)
         {
             int_part += 1;
             frac_part = 0;
         }
 
-        for(int i = 0 ; i < _decimal_places && pos >= 0; i++)
+        for(int i = 0 ; i < precision && pos >= 0; i++)
         {
             _set_char_in_string(where, _get_character(frac_part % 10 + '0'), pos--);
             frac_part /= 10;
@@ -379,7 +379,8 @@ public:
         }
     }
 
-    void print(CharacterStrings where, int value)
+    template<typename T, typename enable_if<is_integral<T>::value, bool>::type = true>
+    void print(CharacterStrings where, T value)
     {
         clear_string(where);
         int16_t pos = TLcd::_get_string_segments_map(where).size - 1;
@@ -394,6 +395,28 @@ public:
         if (pos >= 0)
         {
             _set_char_in_string(where, _get_character(sign), pos);
+        }
+    }
+
+    void print(CharacterStrings where, const char * str)
+    {
+        uint16_t i = 0, pos = 0;
+        bool skip_next_char;
+        uint8_t character;
+
+        while (str[i] != 0x00)
+        {
+            skip_next_char = false;
+            character = _get_character(str[i]);
+
+            if (str[i+1] == '.' || str[i+1] == ',')
+            {
+                character |= _dot ;
+                skip_next_char = true ;
+            }
+            _set_char_in_string(where, character, pos++);
+
+            i += skip_next_char ? 2 : 1 ;
         }
     }
 
@@ -495,8 +518,6 @@ protected:
     }
 
 private:
-    constexpr static int8_t _decimal_places = 2;
-
     void _set_segments_by_mask(const ArrayWrapper<uint8_t> & segments, uint16_t mask)
     {
         if (!segments.data || !segments.size)
