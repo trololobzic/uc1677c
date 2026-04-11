@@ -22,59 +22,134 @@ TEST_CASE("cgs164a00 methods")
         CHECK(Mock::check_ram(expected_ram_state));
     };
 
-    SUBCASE("print int")
+    SUBCASE("print int in main string")
     {
         check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, 1); }, {Segments::_17B, Segments::_17C});
         check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, 12); }, {Segments::_16B, Segments::_16C,
-                            Segments::_17A, Segments::_17B, Segments::_17G, Segments::_17E, Segments::_17D});
+                            Segments::_17A, Segments::_17B, Segments::_17D, Segments::_17E, Segments::_17G});
 
         check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, 123); }, {Segments::_15B, Segments::_15C,
-                            Segments::_16A, Segments::_16B, Segments::_16G, Segments::_16E, Segments::_16D,
+                            Segments::_16A, Segments::_16B, Segments::_16D, Segments::_16E, Segments::_16G,
                             Segments::_17A, Segments::_17B, Segments::_17C, Segments::_17D, Segments::_17G});
 
         check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, 1234); }, {Segments::_14B, Segments::_14C,
-                            Segments::_15A, Segments::_15B, Segments::_15G, Segments::_15E, Segments::_15D,
+                            Segments::_15A, Segments::_15B, Segments::_15D, Segments::_15E, Segments::_15G,
                             Segments::_16A, Segments::_16B, Segments::_16C, Segments::_16D, Segments::_16G,
-                            Segments::_17F, Segments::_17G, Segments::_17B, Segments::_17C});
+                            Segments::_17B, Segments::_17C, Segments::_17F, Segments::_17G});
 
         check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, 12345); }, {Segments::_13B, Segments::_13C,
-                            Segments::_14A, Segments::_14B, Segments::_14G, Segments::_14E, Segments::_14D,
+                            Segments::_14A, Segments::_14B, Segments::_14D, Segments::_14E, Segments::_14G,
                             Segments::_15A, Segments::_15B, Segments::_15C, Segments::_15D, Segments::_15G,
-                            Segments::_16F, Segments::_16G, Segments::_16B, Segments::_16C,
-                            Segments::_17A, Segments::_17F, Segments::_17G, Segments::_17C, Segments::_17D});
+                            Segments::_16B, Segments::_16C, Segments::_16F, Segments::_16G,
+                            Segments::_17A, Segments::_17C, Segments::_17D, Segments::_17F, Segments::_17G});
 
         check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, 123456); }, {Segments::_12B, Segments::_12C,
-                            Segments::_13A, Segments::_13B, Segments::_13G, Segments::_13E, Segments::_13D,
+                            Segments::_13A, Segments::_13B, Segments::_13D, Segments::_13E, Segments::_13G,
                             Segments::_14A, Segments::_14B, Segments::_14C, Segments::_14D, Segments::_14G,
-                            Segments::_15F, Segments::_15G, Segments::_15B, Segments::_15C,
-                            Segments::_16A, Segments::_16F, Segments::_16G, Segments::_16C, Segments::_16D,
-                            Segments::_17A, Segments::_17F, Segments::_17G, Segments::_17C, Segments::_17D, Segments::_17E});
+                            Segments::_15B, Segments::_15C, Segments::_15F, Segments::_15G,
+                            Segments::_16A, Segments::_16C, Segments::_16D, Segments::_16F, Segments::_16G,
+                            Segments::_17A, Segments::_17C, Segments::_17D, Segments::_17E, Segments::_17F, Segments::_17G});
 
         check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, 1234567); }, {Segments::_11B, Segments::_11C,
-                            Segments::_12A, Segments::_12B, Segments::_12G, Segments::_12E, Segments::_12D,
+                            Segments::_12A, Segments::_12B, Segments::_12D, Segments::_12E, Segments::_12G,
                             Segments::_13A, Segments::_13B, Segments::_13C, Segments::_13D, Segments::_13G,
-                            Segments::_14F, Segments::_14G, Segments::_14B, Segments::_14C,
-                            Segments::_15A, Segments::_15F, Segments::_15G, Segments::_15C, Segments::_15D,
-                            Segments::_16A, Segments::_16F, Segments::_16G, Segments::_16C, Segments::_16D, Segments::_16E,
+                            Segments::_14B, Segments::_14C, Segments::_14F, Segments::_14G,
+                            Segments::_15A, Segments::_15C, Segments::_15D, Segments::_15F, Segments::_15G,
+                            Segments::_16A, Segments::_16C, Segments::_16D, Segments::_16E, Segments::_16F, Segments::_16G,
                             Segments::_17A, Segments::_17B, Segments::_17C});
 
         check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, 12345678); }, {Segments::_10B, Segments::_10C,
-                            Segments::_11A, Segments::_11B, Segments::_11G, Segments::_11E, Segments::_11D,
+                            Segments::_11A, Segments::_11B, Segments::_11D, Segments::_11E, Segments::_11G,
                             Segments::_12A, Segments::_12B, Segments::_12C, Segments::_12D, Segments::_12G,
-                            Segments::_13F, Segments::_13G, Segments::_13B, Segments::_13C,
-                            Segments::_14A, Segments::_14F, Segments::_14G, Segments::_14C, Segments::_14D,
-                            Segments::_15A, Segments::_15F, Segments::_15G, Segments::_15C, Segments::_15D, Segments::_15E,
+                            Segments::_13B, Segments::_13C, Segments::_13F, Segments::_13G,
+                            Segments::_14A, Segments::_14C, Segments::_14D, Segments::_14F, Segments::_14G,
+                            Segments::_15A, Segments::_15C, Segments::_15D, Segments::_15E, Segments::_15F, Segments::_15G,
                             Segments::_16A, Segments::_16B, Segments::_16C,
                             Segments::_17A, Segments::_17B, Segments::_17C, Segments::_17D, Segments::_17E, Segments::_17F, Segments::_17G});
 
         check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, -12345678); }, {Segments::_10B, Segments::_10C,
-                            Segments::_11A, Segments::_11B, Segments::_11G, Segments::_11E, Segments::_11D,
+                            Segments::_11A, Segments::_11B, Segments::_11D, Segments::_11E, Segments::_11G,
                             Segments::_12A, Segments::_12B, Segments::_12C, Segments::_12D, Segments::_12G,
-                            Segments::_13F, Segments::_13G, Segments::_13B, Segments::_13C,
-                            Segments::_14A, Segments::_14F, Segments::_14G, Segments::_14C, Segments::_14D,
-                            Segments::_15A, Segments::_15F, Segments::_15G, Segments::_15C, Segments::_15D, Segments::_15E,
+                            Segments::_13B, Segments::_13C, Segments::_13F, Segments::_13G,
+                            Segments::_14A, Segments::_14C, Segments::_14D, Segments::_14F, Segments::_14G,
+                            Segments::_15A, Segments::_15C, Segments::_15D, Segments::_15E, Segments::_15F, Segments::_15G,
                             Segments::_16A, Segments::_16B, Segments::_16C,
                             Segments::_17A, Segments::_17B, Segments::_17C, Segments::_17D, Segments::_17E, Segments::_17F, Segments::_17G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, -1234); }, { Segments::_13G,
+                            Segments::_14B, Segments::_14C,
+                            Segments::_15A, Segments::_15B, Segments::_15D, Segments::_15E, Segments::_15G,
+                            Segments::_16A, Segments::_16B, Segments::_16C, Segments::_16D, Segments::_16G,
+                            Segments::_17B, Segments::_17C, Segments::_17F, Segments::_17G});
+    }
+
+    SUBCASE("print int in additional string")
+    {
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, 1); }, {Segments::_8B, Segments::_8C});
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, 12); }, {Segments::_7B, Segments::_7C,
+                            Segments::_8A, Segments::_8B, Segments::_8D, Segments::_8E, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, 123); }, {Segments::_6B, Segments::_6C,
+                            Segments::_7A, Segments::_7B, Segments::_7D, Segments::_7E, Segments::_7G,
+                            Segments::_8A, Segments::_8B, Segments::_8C, Segments::_8D, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, 1234); }, {Segments::_5B, Segments::_5C,
+                            Segments::_6A, Segments::_6B, Segments::_6D, Segments::_6E, Segments::_6G,
+                            Segments::_7A, Segments::_7B, Segments::_7C, Segments::_7D, Segments::_7G,
+                            Segments::_8B, Segments::_8C, Segments::_8F, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, 12345); }, {Segments::_4B, Segments::_4C,
+                            Segments::_5A, Segments::_5B, Segments::_5D, Segments::_5E, Segments::_5G,
+                            Segments::_6A, Segments::_6B, Segments::_6C, Segments::_6D, Segments::_6G,
+                            Segments::_7B, Segments::_7C, Segments::_7F, Segments::_7G,
+                            Segments::_8A, Segments::_8C, Segments::_8D, Segments::_8F, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, 123456); }, {Segments::_3B, Segments::_3C,
+                            Segments::_4A, Segments::_4B, Segments::_4D, Segments::_4E, Segments::_4G,
+                            Segments::_5A, Segments::_5B, Segments::_5C, Segments::_5D, Segments::_5G,
+                            Segments::_6B, Segments::_6C, Segments::_6F, Segments::_6G,
+                            Segments::_7A, Segments::_7C, Segments::_7D, Segments::_7F, Segments::_7G,
+                            Segments::_8A, Segments::_8C, Segments::_8D, Segments::_8E, Segments::_8F, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, 1234567); }, {Segments::_2B, Segments::_2C,
+                            Segments::_3A, Segments::_3B, Segments::_3D, Segments::_3E, Segments::_3G,
+                            Segments::_4A, Segments::_4B, Segments::_4C, Segments::_4D, Segments::_4G,
+                            Segments::_5B, Segments::_5C, Segments::_5F, Segments::_5G,
+                            Segments::_6A, Segments::_6C, Segments::_6D, Segments::_6F, Segments::_6G,
+                            Segments::_7A, Segments::_7C, Segments::_7D, Segments::_7E, Segments::_7F, Segments::_7G,
+                            Segments::_8A, Segments::_8B, Segments::_8C});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, 12345678); }, {Segments::_1B, Segments::_1C,
+                            Segments::_2A, Segments::_2B, Segments::_2D, Segments::_2E, Segments::_2G,
+                            Segments::_3A, Segments::_3B, Segments::_3C, Segments::_3D, Segments::_3G,
+                            Segments::_4B, Segments::_4C, Segments::_4F, Segments::_4G,
+                            Segments::_5A, Segments::_5C, Segments::_5D, Segments::_5F, Segments::_5G,
+                            Segments::_6A, Segments::_6C, Segments::_6D, Segments::_6E, Segments::_6F, Segments::_6G,
+                            Segments::_7A, Segments::_7B, Segments::_7C,
+                            Segments::_8A, Segments::_8B, Segments::_8C, Segments::_8D, Segments::_8E, Segments::_8F, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, -12345678); }, {Segments::_1B, Segments::_1C,
+                            Segments::_2A, Segments::_2B, Segments::_2D, Segments::_2E, Segments::_2G,
+                            Segments::_3A, Segments::_3B, Segments::_3C, Segments::_3D, Segments::_3G,
+                            Segments::_4B, Segments::_4C, Segments::_4F, Segments::_4G,
+                            Segments::_5A, Segments::_5C, Segments::_5D, Segments::_5F, Segments::_5G,
+                            Segments::_6A, Segments::_6C, Segments::_6D, Segments::_6E, Segments::_6F, Segments::_6G,
+                            Segments::_7A, Segments::_7B, Segments::_7C,
+                            Segments::_8A, Segments::_8B, Segments::_8C, Segments::_8D, Segments::_8E, Segments::_8F, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, -1234); }, { Segments::_4G,
+                            Segments::_5B, Segments::_5C,
+                            Segments::_6A, Segments::_6B, Segments::_6D, Segments::_6E, Segments::_6G,
+                            Segments::_7A, Segments::_7B, Segments::_7C, Segments::_7D, Segments::_7G,
+                            Segments::_8B, Segments::_8C, Segments::_8F, Segments::_8G});
+    }
+
+    SUBCASE("print int in single char string")
+    {
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::tariff, 1); }, {Segments::_9B, Segments::_9C});
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::tariff, 3); }, {Segments::_9A, Segments::_9B, Segments::_9C, Segments::_9D, Segments::_9G});
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::tariff, 6); }, {Segments::_9A, Segments::_9C, Segments::_9D, Segments::_9E, Segments::_9F, Segments::_9G,});
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::tariff, 8); }, {Segments::_9A, Segments::_9B, Segments::_9C, Segments::_9D, Segments::_9E, Segments::_9F, Segments::_9G});
     }
 
     SUBCASE("print float")
@@ -82,7 +157,7 @@ TEST_CASE("cgs164a00 methods")
         //TODO
     }
 
-    SUBCASE("print c-string")
+    SUBCASE("print c-string in main string")
     {
         check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, "abc.defgh"); }, {Segments::_10A, Segments::_10B, Segments::_10C, Segments::_10E, Segments::_10F, Segments::_10G,
                             Segments::_11C, Segments::_11D, Segments::_11E, Segments::_11F, Segments::_11G,
@@ -128,6 +203,98 @@ TEST_CASE("cgs164a00 methods")
                             Segments::_15D, Segments::_15G,
                             Segments::_16A, Segments::_P13,
                             Segments::_17B});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, "abracadabra"); }, {Segments::_10A, Segments::_10B, Segments::_10C, Segments::_10E, Segments::_10F, Segments::_10G,
+                            Segments::_11C, Segments::_11D, Segments::_11E, Segments::_11F, Segments::_11G,
+                            Segments::_12E, Segments::_12G,
+                            Segments::_13A, Segments::_13B, Segments::_13C, Segments::_13E, Segments::_13F, Segments::_13G,
+                            Segments::_14A, Segments::_14D, Segments::_14E, Segments::_14F,
+                            Segments::_15A, Segments::_15B, Segments::_15C, Segments::_15E, Segments::_15F, Segments::_15G,
+                            Segments::_16B, Segments::_16C, Segments::_16D, Segments::_16E, Segments::_16G,
+                            Segments::_17A, Segments::_17B, Segments::_17C, Segments::_17E, Segments::_17F, Segments::_17G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::main, "a.b.r.a.c.a.d.a.b.r.a."); }, {Segments::_10A, Segments::_10B, Segments::_10C, Segments::_10E, Segments::_10F, Segments::_10G,
+                            Segments::_11C, Segments::_11D, Segments::_11E, Segments::_11F, Segments::_11G,
+                            Segments::_12E, Segments::_12G, Segments::_P9,
+                            Segments::_13A, Segments::_13B, Segments::_13C, Segments::_13E, Segments::_13F, Segments::_13G, Segments::_P10,
+                            Segments::_14A, Segments::_14D, Segments::_14E, Segments::_14F, Segments::_P11,
+                            Segments::_15A, Segments::_15B, Segments::_15C, Segments::_15E, Segments::_15F, Segments::_15G, Segments::_P12,
+                            Segments::_16B, Segments::_16C, Segments::_16D, Segments::_16E, Segments::_16G, Segments::_P13,
+                            Segments::_17A, Segments::_17B, Segments::_17C, Segments::_17E, Segments::_17F, Segments::_17G, Segments::_P14});
+    }
+
+    SUBCASE("print c-string in additional string")
+    {
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, "abc.defgh"); }, {Segments::_1A, Segments::_1B, Segments::_1C, Segments::_1E, Segments::_1F, Segments::_1G,
+                            Segments::_2C, Segments::_2D, Segments::_2E, Segments::_2F, Segments::_2G,
+                            Segments::_3A, Segments::_3D, Segments::_3E, Segments::_3F, Segments::_P3,
+                            Segments::_4B, Segments::_4C, Segments::_4D, Segments::_4E, Segments::_4G,
+                            Segments::_5A, Segments::_5D, Segments::_5E, Segments::_5F, Segments::_5G,
+                            Segments::_6A, Segments::_6E, Segments::_6F, Segments::_6G,
+                            Segments::_7A, Segments::_7C, Segments::_7D, Segments::_7E, Segments::_7F,
+                            Segments::_8B, Segments::_8C, Segments::_8E, Segments::_8F, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, "ijkl.mnop"); }, {Segments::_1B, Segments::_1C,
+                            Segments::_2B, Segments::_2C, Segments::_2D,
+                            Segments::_3A, Segments::_3C, Segments::_3E, Segments::_3F, Segments::_3G,
+                            Segments::_4D, Segments::_4E, Segments::_4F, Segments::_P4,
+                            Segments::_5A, Segments::_5C, Segments::_5E, Segments::_5G,
+                            Segments::_6C, Segments::_6E, Segments::_6G,
+                            Segments::_7A, Segments::_7B, Segments::_7C, Segments::_7D, Segments::_7E, Segments::_7F,
+                            Segments::_8A, Segments::_8B, Segments::_8E, Segments::_8F, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, "qrstu.vwx"); }, {Segments::_1A, Segments::_1B, Segments::_1C, Segments::_1F, Segments::_1G,
+                            Segments::_2E, Segments::_2G,
+                            Segments::_3A, Segments::_3C, Segments::_3D, Segments::_3F, Segments::_3G,
+                            Segments::_4D, Segments::_4E, Segments::_4F, Segments::_4G,
+                            Segments::_5C, Segments::_5D, Segments::_5E, Segments::_P5,
+                            Segments::_6B, Segments::_6C, Segments::_6D, Segments::_6E, Segments::_6F,
+                            Segments::_7B, Segments::_7D, Segments::_7F, Segments::_7G,
+                            Segments::_8B, Segments::_8C, Segments::_8E, Segments::_8F, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, "yz1234.56"); }, {Segments::_1B, Segments::_1E, Segments::_1F, Segments::_1G,
+                            Segments::_2A, Segments::_2B, Segments::_2D, Segments::_2E, Segments::_2G,
+                            Segments::_3B, Segments::_3C,
+                            Segments::_4A, Segments::_4B, Segments::_4D, Segments::_4E, Segments::_4G,
+                            Segments::_5A, Segments::_5B, Segments::_5C, Segments::_5D, Segments::_5G,
+                            Segments::_6B, Segments::_6C, Segments::_6F, Segments::_6G, Segments::_P6,
+                            Segments::_7A, Segments::_7C, Segments::_7D, Segments::_7F, Segments::_7G,
+                            Segments::_8A, Segments::_8C, Segments::_8D, Segments::_8E, Segments::_8F, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, "7890_=~.'"); }, {Segments::_1A, Segments::_1B, Segments::_1C,
+                            Segments::_2A, Segments::_2B, Segments::_2C, Segments::_2D, Segments::_2E, Segments::_2F, Segments::_2G,
+                            Segments::_3A, Segments::_3B, Segments::_3C, Segments::_3D, Segments::_3F, Segments::_3G,
+                            Segments::_4A, Segments::_4B, Segments::_4C, Segments::_4D, Segments::_4E, Segments::_4F,
+                            Segments::_5D,
+                            Segments::_6D, Segments::_6G,
+                            Segments::_7A, Segments::_P7,
+                            Segments::_8B});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, "abracadabra"); }, {Segments::_1A, Segments::_1B, Segments::_1C, Segments::_1E, Segments::_1F, Segments::_1G,
+                            Segments::_2C, Segments::_2D, Segments::_2E, Segments::_2F, Segments::_2G,
+                            Segments::_3E, Segments::_3G,
+                            Segments::_4A, Segments::_4B, Segments::_4C, Segments::_4E, Segments::_4F, Segments::_4G,
+                            Segments::_5A, Segments::_5D, Segments::_5E, Segments::_5F,
+                            Segments::_6A, Segments::_6B, Segments::_6C, Segments::_6E, Segments::_6F, Segments::_6G,
+                            Segments::_7B, Segments::_7C, Segments::_7D, Segments::_7E, Segments::_7G,
+                            Segments::_8A, Segments::_8B, Segments::_8C, Segments::_8E, Segments::_8F, Segments::_8G});
+
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::additional1, "a.b.r.a.c.a.d.a.b.r.a."); }, {Segments::_1A, Segments::_1B, Segments::_1C, Segments::_1E, Segments::_1F, Segments::_1G, Segments::_P1,
+                            Segments::_2C, Segments::_2D, Segments::_2E, Segments::_2F, Segments::_2G, Segments::_P2,
+                            Segments::_3E, Segments::_3G, Segments::_P3,
+                            Segments::_4A, Segments::_4B, Segments::_4C, Segments::_4E, Segments::_4F, Segments::_4G, Segments::_P4,
+                            Segments::_5A, Segments::_5D, Segments::_5E, Segments::_5F, Segments::_P5,
+                            Segments::_6A, Segments::_6B, Segments::_6C, Segments::_6E, Segments::_6F, Segments::_6G, Segments::_P6,
+                            Segments::_7B, Segments::_7C, Segments::_7D, Segments::_7E, Segments::_7G, Segments::_P7,
+                            Segments::_8A, Segments::_8B, Segments::_8C, Segments::_8E, Segments::_8F, Segments::_8G, Segments::_P8});
+    }
+
+    SUBCASE("print c-string in single char string")
+    {
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::tariff, "a"); }, {Segments::_9A, Segments::_9B, Segments::_9C, Segments::_9E, Segments::_9F, Segments::_9G});
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::tariff, "1"); }, {Segments::_9B, Segments::_9C});
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::tariff, "c"); }, {Segments::_9A, Segments::_9D, Segments::_9E, Segments::_9F});
+        check_helper([&lcd]{ lcd.print(Lcd::CharacterStrings::tariff, "w"); }, {Segments::_9B, Segments::_9D, Segments::_9F, Segments::_9G});
     }
 }
 
