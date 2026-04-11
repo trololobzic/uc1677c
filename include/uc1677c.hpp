@@ -31,6 +31,27 @@ public:
     static constexpr bool value = decltype(test<TI2C>(0))::value;
 };
 
+template<bool B, typename T = void>
+struct enable_if {};
+
+template<typename T>
+struct enable_if<true, T> { typedef T type; };
+
+template<typename T> struct is_integral       : false_type{};
+template<> struct is_integral<bool>           : true_type{};
+template<> struct is_integral<int8_t>         : true_type{};
+template<> struct is_integral<uint8_t>        : true_type{};
+template<> struct is_integral<int16_t>        : true_type{};
+template<> struct is_integral<uint16_t>       : true_type{};
+template<> struct is_integral<int32_t>        : true_type{};
+template<> struct is_integral<uint32_t>       : true_type{};
+template<> struct is_integral<int64_t>        : true_type{};
+template<> struct is_integral<uint64_t>       : true_type{};
+
+template<typename T> struct is_floating_point : false_type{};
+template<> struct is_floating_point<float>    : true_type{};
+template<> struct is_floating_point<double>   : true_type{};
+
 template <typename F>
 class ScopeGuard
 {
@@ -316,6 +337,67 @@ public:
         }
     }
 
+    template<typename T, typename enable_if<is_floating_point<T>::value, bool>::type = true>
+    void print(CharacterStrings where, T value, uint16_t precision = 2)
+    {
+        clear_string(where);
+        int16_t pos = TLcd::_get_string_segments_map(where).size - 1;
+        const auto sign = Utils::absolute_value(value);
+        const int32_t ten_to_precision_power = Utils::power_of_10(precision);
+
+        int32_t int_part = static_cast<int32_t>(value);
+        int32_t frac_part = static_cast<int32_t>((value - static_cast<T>(int_part)) * ten_to_precision_power);
+
+        //try to eliminate potential rounding error
+        if (frac_part >= ten_to_precision_power)
+        {
+            int_part += 1;
+            frac_part = 0;
+        }
+
+        for(int i = 0 ; i < precision && pos >= 0; i++)
+        {
+            _set_char_in_string(where, _get_character(frac_part % 10 + '0'), pos--);
+            frac_part /= 10;
+        }
+
+        uint8_t dot = _dot;
+        if (!int_part)
+        {
+            _set_char_in_string(where, _get_character('0') | dot, pos--);
+        }
+        else while (int_part > 0 && pos >= 0)
+        {
+            _set_char_in_string(where, _get_character(int_part % 10 + '0') | dot, pos--);
+            int_part /= 10;
+            dot = 0;
+        }
+
+        if (pos >= 0)
+        {
+            _set_char_in_string(where, _get_character(sign), pos);
+        }
+    }
+
+    template<typename T, typename enable_if<is_integral<T>::value, bool>::type = true>
+    void print(CharacterStrings where, T value)
+    {
+        clear_string(where);
+        int16_t pos = TLcd::_get_string_segments_map(where).size - 1;
+        const auto sign = Utils::absolute_value(value);
+
+        while (value > 0 && pos >= 0)
+        {
+            _set_char_in_string(where, _get_character(value % 10 + '0'), pos--);
+            value /= 10;
+        }
+
+        if (pos >= 0)
+        {
+            _set_char_in_string(where, _get_character(sign), pos);
+        }
+    }
+
     void print(CharacterStrings where, const char * str)
     {
         uint16_t i = 0, pos = 0;
@@ -335,61 +417,6 @@ public:
             _set_char_in_string(where, character, pos++);
 
             i += skip_next_char ? 2 : 1 ;
-        }
-    }
-
-    void print(CharacterStrings where, float value)
-    {
-        clear_string(where);
-        int16_t pos = TLcd::_get_string_segments_map(where).size - 1;
-        const auto sign = Utils::absolute_value(value);
-        const int32_t ten_to_dp_power = Utils::power_of_10(_decimal_places);
-
-        int32_t int_part = static_cast<int32_t>(value);
-        int32_t frac_part = static_cast<int32_t>((value - static_cast<float>(int_part)) * ten_to_dp_power);
-
-        //try to eliminate potential rounding error
-        if (frac_part >= ten_to_dp_power)
-        {
-            int_part += 1;
-            frac_part = 0;
-        }
-
-        for(int i = 0 ; i < _decimal_places && pos >= 0; i++)
-        {
-            _set_char_in_string(where, _get_character(frac_part % 10 + '0'), pos--);
-            frac_part /= 10;
-        }
-
-        uint8_t dot = _dot;
-        while (int_part > 0 && pos >= 0)
-        {
-            _set_char_in_string(where, _get_character((int_part % 10 + '0') | dot), pos--);
-            int_part /= 10;
-            dot = 0;
-        }
-
-        if (pos >= 0)
-        {
-            _set_char_in_string(where, _get_character(sign), pos);
-        }
-    }
-
-    void print(CharacterStrings where, int value)
-    {
-        clear_string(where);
-        int16_t pos = TLcd::_get_string_segments_map(where).size - 1;
-        const auto sign = Utils::absolute_value(value);
-
-        while (value > 0 && pos >= 0)
-        {
-            _set_char_in_string(where, _get_character(value % 10 + '0'), pos--);
-            value /= 10;
-        }
-
-        if (pos >= 0)
-        {
-            _set_char_in_string(where, _get_character(sign), pos);
         }
     }
 
@@ -442,11 +469,11 @@ protected:
 
     /// @brief Representation of each of the 256 ascii characters as 7 segments
     /// @verbatim
-    ///  ---     F
-    /// |   |  E   A
+    ///  ---     A
+    /// |   |  F   B
     ///  ---     G
-    /// |   |  D   B
-    ///  ---     C
+    /// |   |  E   C
+    ///  ---     D
     /// @endverbatim
     static uint8_t _get_character(uint8_t ascii_index)
     {
@@ -491,8 +518,6 @@ protected:
     }
 
 private:
-    constexpr static int8_t _decimal_places = 2;
-
     void _set_segments_by_mask(const ArrayWrapper<uint8_t> & segments, uint16_t mask)
     {
         if (!segments.data || !segments.size)
