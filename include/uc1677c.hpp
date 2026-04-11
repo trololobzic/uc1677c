@@ -362,9 +362,13 @@ public:
         }
 
         uint8_t dot = _dot;
-        while (int_part > 0 && pos >= 0)
+        if (!int_part)
         {
-            _set_char_in_string(where, _get_character((int_part % 10 + '0') | dot), pos--);
+            _set_char_in_string(where, _get_character('0') | dot, pos--);
+        }
+        else while (int_part > 0 && pos >= 0)
+        {
+            _set_char_in_string(where, _get_character(int_part % 10 + '0') | dot, pos--);
             int_part /= 10;
             dot = 0;
         }

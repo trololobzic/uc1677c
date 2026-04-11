@@ -60,7 +60,8 @@ struct I2C_ram_mock
     static bool check_ram(const std::vector<size_t> & bits)
     try
     {
-        std::decay_t<decltype(ram)> expected(ram.size(), 0);
+        //std::decay_t<decltype(ram)> expected(ram.size(), 0);
+        expected.assign(ram.size(), 0);
         std::ranges::for_each(bits, [&](const auto & bit){
             const auto byte_idx = bit / 8;
             if (byte_idx > expected.size())
@@ -77,6 +78,7 @@ struct I2C_ram_mock
     }
 
     static inline std::vector<uint8_t> ram;
+    static inline std::vector<uint8_t> expected;
     static inline std::vector<uint8_t> frame;
 };
 
