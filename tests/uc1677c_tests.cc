@@ -224,44 +224,44 @@ TEST_CASE("uc1677c utils")
 {
     SUBCASE("number_of_bytes")
     {
-        CHECK(uc1677c::Utils::number_of_bytes(0) == 0);
-        CHECK(uc1677c::Utils::number_of_bytes(8) == 1);
-        CHECK(uc1677c::Utils::number_of_bytes(9) == 2);
-        CHECK(uc1677c::Utils::number_of_bytes(10) == 2);
-        CHECK(uc1677c::Utils::number_of_bytes(16) == 2);
-        CHECK(uc1677c::Utils::number_of_bytes(17) == 3);
+        CHECK(uc1677c::helpers::Utils::number_of_bytes(0) == 0);
+        CHECK(uc1677c::helpers::Utils::number_of_bytes(8) == 1);
+        CHECK(uc1677c::helpers::Utils::number_of_bytes(9) == 2);
+        CHECK(uc1677c::helpers::Utils::number_of_bytes(10) == 2);
+        CHECK(uc1677c::helpers::Utils::number_of_bytes(16) == 2);
+        CHECK(uc1677c::helpers::Utils::number_of_bytes(17) == 3);
     }
 
     SUBCASE("absolute_value")
     {
         int a = 0;
-        CHECK(uc1677c::Utils::absolute_value(a) == ' ');
+        CHECK(uc1677c::helpers::Utils::absolute_value(a) == ' ');
         CHECK(a == 0);
 
         a = 10;
-        CHECK(uc1677c::Utils::absolute_value(a) == ' ');
+        CHECK(uc1677c::helpers::Utils::absolute_value(a) == ' ');
         CHECK(a == 10);
 
         a = 9999;
-        CHECK(uc1677c::Utils::absolute_value(a) == ' ');
+        CHECK(uc1677c::helpers::Utils::absolute_value(a) == ' ');
         CHECK(a == 9999);
 
         a = -10;
-        CHECK(uc1677c::Utils::absolute_value(a) == '-');
+        CHECK(uc1677c::helpers::Utils::absolute_value(a) == '-');
         CHECK(a == 10);
 
         a = -999;
-        CHECK(uc1677c::Utils::absolute_value(a) == '-');
+        CHECK(uc1677c::helpers::Utils::absolute_value(a) == '-');
         CHECK(a == 999);
     }
 
     SUBCASE("power_of_10")
     {
-        CHECK(uc1677c::Utils::power_of_10(0) == 1);
-        CHECK(uc1677c::Utils::power_of_10(1) == 10);
-        CHECK(uc1677c::Utils::power_of_10(2) == 100);
-        CHECK(uc1677c::Utils::power_of_10(3) == 1000);
-        CHECK(uc1677c::Utils::power_of_10(4) == 10000);
-        CHECK(uc1677c::Utils::power_of_10(5) == 100000);
+        CHECK(uc1677c::helpers::Utils::power_of_10(0) == 1);
+        CHECK(uc1677c::helpers::Utils::power_of_10(1) == 10);
+        CHECK(uc1677c::helpers::Utils::power_of_10(2) == 100);
+        CHECK(uc1677c::helpers::Utils::power_of_10(3) == 1000);
+        CHECK(uc1677c::helpers::Utils::power_of_10(4) == 10000);
+        CHECK(uc1677c::helpers::Utils::power_of_10(5) == 100000);
     }
 }

@@ -13,8 +13,51 @@ void setup()
 
 void loop()
 {
-    lcd.print(Lcd::CharacterStrings::main, "sefesf");
-    lcd.print(Lcd::CharacterStrings::main, 12.f);
+    lcd.light_all_segments(1);
+    delay(2000);
+    lcd.light_all_segments(0);
+
+    lcd.print(Lcd::CharacterStrings::main, "hello");
+    lcd.update();
+    delay(2000);
+
+    lcd.print(Lcd::CharacterStrings::main, 5.12);
+    lcd.set_unit(Lcd::Units::volt);
+    lcd.update();
+    delay(2000);
+
+    lcd.print(Lcd::CharacterStrings::main, 12);
     lcd.set_unit(Lcd::Units::kilo | Lcd::Units::amper);
     lcd.update();
+    delay(2000);
+
+    lcd.clear_string(Lcd::CharacterStrings::main);
+    lcd.print(Lcd::CharacterStrings::additional1, "192.168.1.2");
+    lcd.update();
+    delay(2000);
+
+    lcd.clear_all();
+    auto other_segments_mask = lcd.set_other(Lcd::Other::low_battery | Lcd::Other::tariff_word);
+    lcd.print(Lcd::CharacterStrings::tariff, 4);
+    lcd.update();
+    delay(2000);
+
+    other_segments_mask |= Lcd::Other::reley;
+    lcd.set_other(other_segments_mask);
+    lcd.update();
+    delay(2000);
+
+    other_segments_mask &= ~Lcd::Other::reley;
+    lcd.set_other(other_segments_mask);
+    lcd.update();
+    delay(2000);
+
+    lcd.set_other(0);
+    lcd.clear_string(Lcd::CharacterStrings::tariff);
+    lcd.set_period(Lcd::Period::last | Lcd::Period::year | Lcd::Period::summer);
+    lcd.set_tick(Lcd::Tick::tick_1 | Lcd::Tick::tick_3);
+    lcd.blink(2);
+    lcd.update();
+    delay(2000);
+    lcd.blink(0);
 }

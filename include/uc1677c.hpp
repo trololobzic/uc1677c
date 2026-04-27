@@ -1,9 +1,8 @@
 #pragma once
 #include <stdint.h>
 
-namespace uc1677c
+namespace uc1677c::traits
 {
-
 template<typename T, T v> struct integral_constant
 {
     static const T value = v;
@@ -37,20 +36,28 @@ struct enable_if {};
 template<typename T>
 struct enable_if<true, T> { typedef T type; };
 
-template<typename T> struct is_integral       : false_type{};
-template<> struct is_integral<bool>           : true_type{};
-template<> struct is_integral<int8_t>         : true_type{};
-template<> struct is_integral<uint8_t>        : true_type{};
-template<> struct is_integral<int16_t>        : true_type{};
-template<> struct is_integral<uint16_t>       : true_type{};
-template<> struct is_integral<int32_t>        : true_type{};
-template<> struct is_integral<uint32_t>       : true_type{};
-template<> struct is_integral<int64_t>        : true_type{};
-template<> struct is_integral<uint64_t>       : true_type{};
+template<typename T> struct is_integral           : false_type{};
+template<> struct is_integral<bool>               : true_type{};
+template<> struct is_integral<char>               : true_type{};
+template<> struct is_integral<signed char>        : true_type{};
+template<> struct is_integral<unsigned char>      : true_type{};
+template<> struct is_integral<short>              : true_type{};
+template<> struct is_integral<unsigned short>     : true_type{};
+template<> struct is_integral<int>                : true_type{};
+template<> struct is_integral<unsigned int>       : true_type{};
+template<> struct is_integral<long>               : true_type{};
+template<> struct is_integral<unsigned long>      : true_type{};
+template<> struct is_integral<long long>          : true_type{};
+template<> struct is_integral<unsigned long long> : true_type{};
 
-template<typename T> struct is_floating_point : false_type{};
-template<> struct is_floating_point<float>    : true_type{};
-template<> struct is_floating_point<double>   : true_type{};
+template<typename T> struct is_floating_point     : false_type{};
+template<> struct is_floating_point<float>        : true_type{};
+template<> struct is_floating_point<double>       : true_type{};
+
+}
+
+namespace uc1677c::helpers
+{
 
 template <typename F>
 class ScopeGuard
@@ -126,10 +133,16 @@ struct Utils
     }
 };
 
+}
+
+
+namespace uc1677c
+{
+
 template<typename TI2C, uint16_t ram_size>
 class Uc1677cBase
 {
-    static_assert(has_bus_interface<TI2C>::value,
+    static_assert(traits::has_bus_interface<TI2C>::value,
         "\n\n[ERROR] The provided class does not match the required HAL interface!\n"
         "Expected: start_transmission(u8), end_transmission(), write_byte(u8)->bool, read_byte()->u8.\n");
 
@@ -237,7 +250,7 @@ protected:
 
     static bool _set_cmd(uint8_t cmd)
     {
-        ScopeGuard<void(*)()> guard(I2C::end_transmission);
+        helpers::ScopeGuard<void(*)()> guard(I2C::end_transmission);
 
         if (!I2C::start_transmission(_addr)) { return false; }
         if (!I2C::write_byte(0x00) ) { return false; }
@@ -248,7 +261,7 @@ protected:
 
     static bool _set_data(uint8_t data)
     {
-        ScopeGuard<void(*)()> guard(I2C::end_transmission);
+        helpers::ScopeGuard<void(*)()> guard(I2C::end_transmission);
 
         if (!I2C::start_transmission(_addr)) { return false; }
         if (!I2C::write_byte(0x40) ) { return false; }
@@ -337,13 +350,13 @@ public:
         }
     }
 
-    template<typename T, typename enable_if<is_floating_point<T>::value, bool>::type = true>
+    template<typename T, typename traits::enable_if<traits::is_floating_point<T>::value, bool>::type = true>
     void print(CharacterStrings where, T value, uint16_t precision = 2)
     {
         clear_string(where);
         int16_t pos = TLcd::_get_string_segments_map(where).size - 1;
-        const auto sign = Utils::absolute_value(value);
-        const int32_t ten_to_precision_power = Utils::power_of_10(precision);
+        const auto sign = helpers::Utils::absolute_value(value);
+        const int32_t ten_to_precision_power = helpers::Utils::power_of_10(precision);
 
         int32_t int_part = static_cast<int32_t>(value);
         int32_t frac_part = static_cast<int32_t>((value - static_cast<T>(int_part)) * ten_to_precision_power);
@@ -355,7 +368,7 @@ public:
             frac_part = 0;
         }
 
-        for(int i = 0 ; i < precision && pos >= 0; i++)
+        for(decltype(precision) i = 0 ; i < precision && pos >= 0; i++)
         {
             _set_char_in_string(where, _get_character(frac_part % 10 + '0'), pos--);
             frac_part /= 10;
@@ -379,12 +392,12 @@ public:
         }
     }
 
-    template<typename T, typename enable_if<is_integral<T>::value, bool>::type = true>
+    template<typename T, typename traits::enable_if<traits::is_integral<T>::value, bool>::type = true>
     void print(CharacterStrings where, T value)
     {
         clear_string(where);
         int16_t pos = TLcd::_get_string_segments_map(where).size - 1;
-        const auto sign = Utils::absolute_value(value);
+        const auto sign = helpers::Utils::absolute_value(value);
 
         while (value > 0 && pos >= 0)
         {
@@ -420,29 +433,34 @@ public:
         }
     }
 
-    void set_unit(uint16_t unit_mask)
+    uint16_t set_unit(uint16_t unit_mask)
     {
         _set_segments_by_mask(TLcd::_get_unit_segments_map(), unit_mask);
+        return unit_mask;
     }
 
-    void set_phase(uint16_t phase_mask)
+    uint16_t set_phase(uint16_t phase_mask)
     {
         _set_segments_by_mask(TLcd::_get_phase_segments_map(), phase_mask);
+        return phase_mask;
     }
 
-    void set_period(uint16_t period_mask)
+    uint16_t set_period(uint16_t period_mask)
     {
         _set_segments_by_mask(TLcd::_get_period_segments_map(), period_mask);
+        return period_mask;
     }
 
-    void set_tick(uint16_t tick_mask)
+    uint16_t set_tick(uint16_t tick_mask)
     {
         _set_segments_by_mask(TLcd::_get_tick_segments_map(), tick_mask);
+        return tick_mask;
     }
 
-    void set_other(uint16_t other_mask)
+    uint16_t set_other(uint16_t other_mask)
     {
         _set_segments_by_mask(TLcd::_get_other_segments_map(), other_mask);
+        return other_mask;
     }
 
 protected:
@@ -518,7 +536,7 @@ protected:
     }
 
 private:
-    void _set_segments_by_mask(const ArrayWrapper<uint8_t> & segments, uint16_t mask)
+    void _set_segments_by_mask(const helpers::ArrayWrapper<uint8_t> & segments, uint16_t mask)
     {
         if (!segments.data || !segments.size)
         {
