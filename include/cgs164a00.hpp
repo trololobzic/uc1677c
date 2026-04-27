@@ -26,7 +26,7 @@ enum Segments : uint8_t
     size
 };
 
-static constexpr uint16_t ram_size = Utils::number_of_bytes(Segments::size);
+static constexpr uint16_t ram_size = helpers::Utils::number_of_bytes(Segments::size);
 };
 
 
@@ -43,7 +43,7 @@ public:
 protected:
     constexpr static uint8_t NO = 0xFF;
 
-    static ArrayWrapper<Digit> _get_string_segments_map(CharacterStrings where)
+    static helpers::ArrayWrapper<Digit> _get_string_segments_map(CharacterStrings where)
     {
         switch(where)
         {
@@ -102,7 +102,7 @@ protected:
 
     /// @brief Listing of units segments
     /// @details The segments are listed in the same order as in the Base::UnitSegments
-    static ArrayWrapper<uint8_t> _get_unit_segments_map()
+    static helpers::ArrayWrapper<uint8_t> _get_unit_segments_map()
     {
         static constexpr uint8_t _unit_segments[static_cast<uint16_t>(Base::UnitSegments::size)] =
         {
@@ -126,7 +126,7 @@ protected:
 
     /// @brief Listing of phase segments
     /// @details The segments are listed in the same order as in the Base::PhaseSegments
-    static ArrayWrapper<uint8_t> _get_phase_segments_map()
+    static helpers::ArrayWrapper<uint8_t> _get_phase_segments_map()
     {
         static constexpr uint8_t _phase_segments[static_cast<uint16_t>(Base::PhaseSegments::size)] =
         {
@@ -142,7 +142,7 @@ protected:
 
     /// @brief Listing of period segments
     /// @details The segments are listed in the same order as in the Base::PeriodSegments
-    static ArrayWrapper<uint8_t> _get_period_segments_map()
+    static helpers::ArrayWrapper<uint8_t> _get_period_segments_map()
     {
         static constexpr uint8_t _period_segments[static_cast<uint16_t>(Base::PeriodSegments::size)] =
         {
@@ -162,7 +162,7 @@ protected:
 
     /// @brief Listing of tick segments
     /// @details The segments are listed in the same order as in the Base::TickSegments
-    static ArrayWrapper<uint8_t> _get_tick_segments_map()
+    static helpers::ArrayWrapper<uint8_t> _get_tick_segments_map()
     {
         const uint8_t _tick_segments[static_cast<uint16_t>(Base::TickSegments::size)] =
         {
@@ -182,7 +182,7 @@ protected:
 
     /// @brief Listing of tick segments
     /// @details The segments are listed in the same order as in the Base::OtherSegments
-    static ArrayWrapper<uint8_t> _get_other_segments_map()
+    static helpers::ArrayWrapper<uint8_t> _get_other_segments_map()
     {
         const uint8_t _other_segments[static_cast<uint16_t>(Base::OtherSegments::size)] =
         {
